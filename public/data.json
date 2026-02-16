@@ -1,0 +1,2482 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-02-16T11:00:00Z",
+    "coordinateSystem": "normalized_scaled"
+  },
+  "nodes": [
+    {
+      "id": "N-000",
+      "title": "H-EE 契約",
+      "description": "起点（HとEEの契約）",
+      "role": "",
+      "category": "contract",
+      "status": "active",
+      "tags": [
+        "契約",
+        "契約"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 100,
+        "y": 753
+      },
+      "next": [
+        "N-001",
+        "N-010"
+      ]
+    },
+    {
+      "id": "N-001",
+      "title": "EE-地権者 土地契約",
+      "description": "地権者絡みの起点",
+      "role": "",
+      "category": "contract",
+      "status": "active",
+      "tags": [
+        "契約",
+        "契約/土地"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 300,
+        "y": 206
+      },
+      "next": [
+        "N-002"
+      ]
+    },
+    {
+      "id": "N-002",
+      "title": "関係法令手続",
+      "description": "許認可系の親ノード",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "手続",
+        "法令/許認可"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 333
+      },
+      "next": [
+        "N-003"
+      ]
+    },
+    {
+      "id": "N-003",
+      "title": "住民説明会",
+      "description": "以降の許認可群の上位",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "手続",
+        "法令/許認可"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 445
+      },
+      "next": []
+    },
+    {
+      "id": "N-004",
+      "title": "農転許可取得",
+      "description": "農地転用が必要なケース",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "手続",
+        "法令/許認可"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 563
+      },
+      "next": []
+    },
+    {
+      "id": "N-005",
+      "title": "建築リサイクル届",
+      "description": "建リサ",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "届出",
+        "法令/許認可"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 680
+      },
+      "next": []
+    },
+    {
+      "id": "N-006",
+      "title": "消防届",
+      "description": "消防関連",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "届出",
+        "法令/許認可"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 798
+      },
+      "next": []
+    },
+    {
+      "id": "N-010",
+      "title": "EE-EPC 工事請負契約",
+      "description": "EPC契約の起点",
+      "role": "",
+      "category": "contract",
+      "status": "active",
+      "tags": [
+        "契約",
+        "契約"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 300,
+        "y": 1061
+      },
+      "next": [
+        "N-011"
+      ]
+    },
+    {
+      "id": "N-011",
+      "title": "着工前書類",
+      "description": "着工前に必要",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "書類",
+        "工事準備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 1182
+      },
+      "next": [
+        "N-012"
+      ]
+    },
+    {
+      "id": "N-012",
+      "title": "材発注",
+      "description": "調達開始",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "発注",
+        "工事準備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 1302
+      },
+      "next": [
+        "N-013"
+      ]
+    },
+    {
+      "id": "N-013",
+      "title": "キュービクルカギ メーカーへ送付",
+      "description": "図中に「キュービクルカギ」",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "手配",
+        "工事準備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 1453
+      },
+      "next": [
+        "N-014"
+      ]
+    },
+    {
+      "id": "N-014",
+      "title": "SSE 産廃契約（現場共有）",
+      "description": "産廃周り",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "契約",
+        "工事準備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 1634
+      },
+      "next": [
+        "N-015"
+      ]
+    },
+    {
+      "id": "N-015",
+      "title": "電力仕様・名義変更 EPC-EE",
+      "description": "図下段の名義変更系列へ合流",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "手続",
+        "電力/名義"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 650,
+        "y": 1800
+      },
+      "next": [
+        "N-030"
+      ]
+    },
+    {
+      "id": "N-016",
+      "title": "産廃バッカン調整",
+      "description": "産廃バッカン手配系",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "調整",
+        "工事準備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1300,
+        "y": 1634
+      },
+      "next": []
+    },
+    {
+      "id": "J-001",
+      "title": "Junction 1",
+      "description": "Branch point",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1250,
+        "y": 710
+      },
+      "next": [
+        "N-021",
+        "N-023"
+      ]
+    },
+    {
+      "id": "J-002",
+      "title": "Junction 2",
+      "description": "Branch point to N-022",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1750,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-022"
+      ]
+    },
+    {
+      "id": "J-003",
+      "title": "Junction 3",
+      "description": "Branch point to N-024",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1700,
+        "y": 710
+      },
+      "next": [
+        "N-024",
+        "J-004"
+      ]
+    },
+    {
+      "id": "J-004",
+      "title": "Junction 4",
+      "description": "Branch point to N-025",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1900,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-005",
+      "title": "Junction 5",
+      "description": "Branch point to N-029",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2250,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-006",
+      "title": "Junction 6",
+      "description": "Branch point to N-028",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2300,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-007",
+      "title": "Junction 7",
+      "description": "Branch point to N-026",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2350,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-008",
+      "title": "Junction 8",
+      "description": "Branch point to N-016",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1226,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-009",
+      "title": "Junction 9",
+      "description": "Branch point to N-040",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2875,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-010",
+      "title": "Junction 10",
+      "description": "Branch point to N-041",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2910,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-011",
+      "title": "Junction 11",
+      "description": "Branch point to N-050",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3200,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-012",
+      "title": "Junction 12",
+      "description": "Branch point to N-051",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3230,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-013",
+      "title": "Junction 13",
+      "description": "Branch point to N-052",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3260,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-014",
+      "title": "Junction 14",
+      "description": "Branch point to N-054",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3530,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-015",
+      "title": "Junction 15",
+      "description": "Branch point to N-053",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3560,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-016",
+      "title": "Junction 16",
+      "description": "Branch point to N-055",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3850,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-017",
+      "title": "Junction 17",
+      "description": "Branch point to N-056",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4150,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-018",
+      "title": "Junction 18",
+      "description": "Branch point to N-057",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4450,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-019",
+      "title": "Junction 19",
+      "description": "Branch point to N-090",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4730,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-020",
+      "title": "Junction 20",
+      "description": "Branch point to N-032",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4760,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-021",
+      "title": "Junction 21",
+      "description": "Branch point to N-084",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4790,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-022",
+      "title": "Junction 22",
+      "description": "Branch point to N-058",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4820,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-023",
+      "title": "Junction 23",
+      "description": "Branch point to N-060",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4850,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "J-024",
+      "title": "Junction 24",
+      "description": "Branch point to N-061",
+      "role": "",
+      "category": "junction",
+      "status": "active",
+      "tags": [],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 5700,
+        "y": 710
+      },
+      "next": [
+        "N-059",
+        "N-025"
+      ]
+    },
+    {
+      "id": "N-020",
+      "title": "着工",
+      "description": "「着工」起点",
+      "role": "",
+      "category": "construction",
+      "status": "active",
+      "tags": [
+        "マイルストーン",
+        "工事"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 950,
+        "y": 680
+      },
+      "next": [
+        "N-021"
+      ]
+    },
+    {
+      "id": "N-021",
+      "title": "中間金書類",
+      "description": "中間金関連",
+      "role": "",
+      "category": "milestone",
+      "status": "active",
+      "tags": [
+        "書類",
+        "工事/契約金"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1350,
+        "y": 680
+      },
+      "next": [
+        "N-022"
+      ]
+    },
+    {
+      "id": "N-022",
+      "title": "工事中主技と契約",
+      "description": "「主技」契約（工事中）",
+      "role": "",
+      "category": "construction",
+      "status": "active",
+      "tags": [
+        "契約",
+        "工事"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1800,
+        "y": 565
+      },
+      "next": []
+    },
+    {
+      "id": "N-023",
+      "title": "材納入",
+      "description": "材の搬入タイミング",
+      "role": "",
+      "category": "procurement",
+      "status": "active",
+      "tags": [
+        "納入",
+        "工事/調達"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1350,
+        "y": 880
+      },
+      "next": []
+    },
+    {
+      "id": "N-024",
+      "title": "モックアップ検査",
+      "description": "施工前の確認工程",
+      "role": "",
+      "category": "inspection",
+      "status": "active",
+      "tags": [
+        "検査",
+        "工事/品質"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1750,
+        "y": 880
+      },
+      "next": []
+    },
+    {
+      "id": "N-025",
+      "title": "QB 納入",
+      "description": "キュービクル（QB）",
+      "role": "",
+      "category": "equipment",
+      "status": "active",
+      "tags": [
+        "納入",
+        "工事/設備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1988,
+        "y": 800
+      },
+      "next": []
+    },
+    {
+      "id": "N-026",
+      "title": "気象計測器手配",
+      "description": "気象計測器の準備",
+      "role": "",
+      "category": "equipment",
+      "status": "active",
+      "tags": [
+        "手配",
+        "付帯設備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2400,
+        "y": 800
+      },
+      "next": [
+        "N-027"
+      ]
+    },
+    {
+      "id": "N-027",
+      "title": "気象計測器 保証書発行依頼",
+      "description": "保証書発行依頼",
+      "role": "",
+      "category": "equipment",
+      "status": "active",
+      "tags": [
+        "依頼",
+        "付帯設備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2650,
+        "y": 800
+      },
+      "next": []
+    },
+    {
+      "id": "N-028",
+      "title": "標識・看板手配",
+      "description": "現場標識/看板",
+      "role": "",
+      "category": "equipment",
+      "status": "active",
+      "tags": [
+        "手配",
+        "付帯設備"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2400,
+        "y": 900
+      },
+      "next": []
+    },
+    {
+      "id": "N-029",
+      "title": "カメラ用SDカード手配",
+      "description": "SDカード手配",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "手配",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2400,
+        "y": 1000
+      },
+      "next": []
+    },
+    {
+      "id": "N-030",
+      "title": "電力名義変更 EE-H",
+      "description": "図下段",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "手続",
+        "電力/名義"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 1899,
+        "y": 1800
+      },
+      "next": [
+        "N-031"
+      ]
+    },
+    {
+      "id": "N-031",
+      "title": "受電日・発調開始日 決定",
+      "description": "日程確定",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "決定",
+        "電力/運開"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2135,
+        "y": 1800
+      },
+      "next": [
+        "N-032"
+      ]
+    },
+    {
+      "id": "N-032",
+      "title": "発調申込 E・Flow と打合せ",
+      "description": "発調の申込・調整",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "申込",
+        "電力/運開"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2451,
+        "y": 1790
+      },
+      "next": []
+    },
+    {
+      "id": "N-040",
+      "title": "スマートロガー SIM手配（スマエナに依頼）（引渡し2か月前〜OK）",
+      "description": "引渡し2か月前ルールが重要",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "手配",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2950,
+        "y": 1000
+      },
+      "next": [
+        "N-041"
+      ]
+    },
+    {
+      "id": "N-041",
+      "title": "監視カメラ手配（引渡し2か月前〜OK）",
+      "description": "同上",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "手配",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 2950,
+        "y": 800
+      },
+      "next": [
+        "N-042"
+      ]
+    },
+    {
+      "id": "N-042",
+      "title": "カメラ用SDカード／スマートロガーSIM 送付",
+      "description": "送付工程",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "送付",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3200,
+        "y": 1200
+      },
+      "next": []
+    },
+    {
+      "id": "N-050",
+      "title": "機械的完工試験（IVカーブ）",
+      "description": "IV試験",
+      "role": "",
+      "category": "inspection",
+      "status": "active",
+      "tags": [
+        "試験",
+        "試験/完工"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3300,
+        "y": 950
+      },
+      "next": [
+        "N-051"
+      ]
+    },
+    {
+      "id": "N-051",
+      "title": "機械的完工 書類",
+      "description": "完工書類",
+      "role": "",
+      "category": "inspection",
+      "status": "active",
+      "tags": [
+        "書類",
+        "試験/完工"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3300,
+        "y": 565
+      },
+      "next": [
+        "N-052"
+      ]
+    },
+    {
+      "id": "N-052",
+      "title": "竣工検査",
+      "description": "竣工検査",
+      "role": "",
+      "category": "inspection",
+      "status": "active",
+      "tags": [
+        "検査",
+        "試験/完工"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3300,
+        "y": 800
+      },
+      "next": [
+        "N-053"
+      ]
+    },
+    {
+      "id": "N-053",
+      "title": "使用前自己確認",
+      "description": "使用前自己確認",
+      "role": "",
+      "category": "inspection",
+      "status": "active",
+      "tags": [
+        "確認",
+        "試験/完工"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3600,
+        "y": 800
+      },
+      "next": [
+        "N-054"
+      ]
+    },
+    {
+      "id": "N-054",
+      "title": "受電",
+      "description": "受電後工程へ",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "マイルストーン",
+        "運開"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3600,
+        "y": 950
+      },
+      "next": [
+        "N-055"
+      ]
+    },
+    {
+      "id": "N-055",
+      "title": "性能試験",
+      "description": "性能試験",
+      "role": "",
+      "category": "power",
+      "status": "active",
+      "tags": [
+        "試験",
+        "運開"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3900,
+        "y": 800
+      },
+      "next": [
+        "N-056"
+      ]
+    },
+    {
+      "id": "N-056",
+      "title": "保安監督部 届出",
+      "description": "保安監督部への届出",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "届出",
+        "法令/保安"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4200,
+        "y": 800
+      },
+      "next": [
+        "N-057"
+      ]
+    },
+    {
+      "id": "N-057",
+      "title": "保安監督部 受理",
+      "description": "受理",
+      "role": "",
+      "category": "legal",
+      "status": "active",
+      "tags": [
+        "受理",
+        "法令/保安"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4500,
+        "y": 800
+      },
+      "next": [
+        "N-058"
+      ]
+    },
+    {
+      "id": "N-058",
+      "title": "電気的完工 引渡書類",
+      "description": "引渡し系に接続",
+      "role": "",
+      "category": "handover",
+      "status": "active",
+      "tags": [
+        "書類",
+        "引渡"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 5000,
+        "y": 565
+      },
+      "next": [
+        "N-059"
+      ]
+    },
+    {
+      "id": "N-059",
+      "title": "引渡 BrON",
+      "description": "BrON引渡",
+      "role": "",
+      "category": "handover",
+      "status": "active",
+      "tags": [
+        "引渡",
+        "引渡"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 5300,
+        "y": 670
+      },
+      "next": [
+        "N-060"
+      ]
+    },
+    {
+      "id": "N-060",
+      "title": "BrON 日時連絡",
+      "description": "日程連絡（モーダルに担当/宛先必須）",
+      "role": "",
+      "category": "handover",
+      "status": "active",
+      "tags": [
+        "連絡",
+        "引渡"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4948,
+        "y": 800
+      },
+      "next": []
+    },
+    {
+      "id": "N-061",
+      "title": "土地登記完了資料 原本郵送必要書類",
+      "description": "原本郵送がボトルネック化しやすい",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "郵送",
+        "登記/書類"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4300,
+        "y": 206
+      },
+      "next": []
+    },
+    {
+      "id": "N-062",
+      "title": "スマエナへ QB鍵送付",
+      "description": "QB鍵の送付",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "送付",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 5600,
+        "y": 670
+      },
+      "next": []
+    },
+    {
+      "id": "N-070",
+      "title": "スマエナに FusionSolar 設定依頼",
+      "description": "FusionSolar設定",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "依頼",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3900,
+        "y": 950
+      },
+      "next": [
+        "N-071"
+      ]
+    },
+    {
+      "id": "N-071",
+      "title": "共有",
+      "description": "共有ノード（リンク格納向き）",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "共有",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4150,
+        "y": 950
+      },
+      "next": []
+    },
+    {
+      "id": "N-072",
+      "title": "スマエナと カメラ設定微調整",
+      "description": "設定微調整",
+      "role": "",
+      "category": "communication",
+      "status": "active",
+      "tags": [
+        "調整",
+        "監視/通信"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3900,
+        "y": 1100
+      },
+      "next": []
+    },
+    {
+      "id": "N-080",
+      "title": "地目変更",
+      "description": "上段登記系列",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "手続",
+        "登記/法務"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3182,
+        "y": 206
+      },
+      "next": [
+        "N-081"
+      ]
+    },
+    {
+      "id": "N-081",
+      "title": "移転登記 地権者→EE",
+      "description": "所有権移転",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "登記",
+        "登記/法務"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3436,
+        "y": 206
+      },
+      "next": [
+        "N-082"
+      ]
+    },
+    {
+      "id": "N-082",
+      "title": "移転登記 EE→H",
+      "description": "EE→H移転",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "登記",
+        "登記/法務"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3710,
+        "y": 206
+      },
+      "next": [
+        "N-083"
+      ]
+    },
+    {
+      "id": "N-083",
+      "title": "登記完了",
+      "description": "登記完了",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "完了",
+        "登記/法務"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4000,
+        "y": 206
+      },
+      "next": [
+        "N-084"
+      ]
+    },
+    {
+      "id": "N-084",
+      "title": "法令関係 名義変更手続",
+      "description": "名義変更系",
+      "role": "",
+      "category": "registration",
+      "status": "active",
+      "tags": [
+        "手続",
+        "登記/法務"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 4000,
+        "y": 333
+      },
+      "next": []
+    },
+    {
+      "id": "N-090",
+      "title": "バッカン回収日 決定連絡",
+      "description": "産廃バッカン回収日の確定連絡",
+      "role": "",
+      "category": "waste",
+      "status": "active",
+      "tags": [
+        "連絡",
+        "工事/産廃"
+      ],
+      "links": [],
+      "inputs": [],
+      "outputs": [],
+      "position": {
+        "x": 3977,
+        "y": 1634
+      },
+      "next": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-N-000-N-001",
+      "source": "N-000",
+      "target": "N-001",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-000-N-010",
+      "source": "N-000",
+      "target": "N-010",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-001-N-002",
+      "source": "N-001",
+      "target": "N-002",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-002-N-003",
+      "source": "N-002",
+      "target": "N-003",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-002-N-004",
+      "source": "N-002",
+      "target": "N-004",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-002-N-084",
+      "source": "N-002",
+      "target": "N-084",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-002-N-005",
+      "source": "N-002",
+      "target": "N-005",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-002-N-006",
+      "source": "N-002",
+      "target": "N-006",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-001-N-080",
+      "source": "N-001",
+      "target": "N-080",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-080-N-081",
+      "source": "N-080",
+      "target": "N-081",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-081-N-082",
+      "source": "N-081",
+      "target": "N-082",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-082-N-083",
+      "source": "N-082",
+      "target": "N-083",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-010-N-011",
+      "source": "N-010",
+      "target": "N-011",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-011-N-012",
+      "source": "N-011",
+      "target": "N-012",
+      "sourceHandle": "s-left",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-012-N-013",
+      "source": "N-012",
+      "target": "N-013",
+      "sourceHandle": "s-left",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-013-N-014",
+      "source": "N-013",
+      "target": "N-014",
+      "sourceHandle": "s-left",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-014-N-015",
+      "source": "N-014",
+      "target": "N-015",
+      "sourceHandle": "s-left",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-003-N-004",
+      "source": "N-003",
+      "target": "N-004",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-004-N-005",
+      "source": "N-004",
+      "target": "N-005",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-005-N-006",
+      "source": "N-005",
+      "target": "N-006",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-005-N-020",
+      "source": "N-005",
+      "target": "N-020",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-015-N-020",
+      "source": "N-015",
+      "target": "N-020",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-015-N-014",
+      "source": "N-015",
+      "target": "N-014",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-014-N-013",
+      "source": "N-014",
+      "target": "N-013",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-013-N-012",
+      "source": "N-013",
+      "target": "N-012",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-012-N-011",
+      "source": "N-012",
+      "target": "N-011",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-026-N-027",
+      "source": "N-026",
+      "target": "N-027",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-016-N-090",
+      "source": "N-016",
+      "target": "N-090",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-015-N-030",
+      "source": "N-015",
+      "target": "N-030",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-030-N-031",
+      "source": "N-030",
+      "target": "N-031",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-031-N-032",
+      "source": "N-031",
+      "target": "N-032",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-014-N-016",
+      "source": "N-014",
+      "target": "N-016",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-041-N-042",
+      "source": "N-041",
+      "target": "N-042",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-040-N-042",
+      "source": "N-040",
+      "target": "N-042",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-083-N-061",
+      "source": "N-083",
+      "target": "N-061",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-054-N-070",
+      "source": "N-054",
+      "target": "N-070",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-054-N-072",
+      "source": "N-054",
+      "target": "N-072",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-070-N-071",
+      "source": "N-070",
+      "target": "N-071",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-020-J-008",
+      "source": "N-020",
+      "target": "J-008",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-008-J-001",
+      "source": "J-008",
+      "target": "J-001",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-008-N-016",
+      "source": "J-008",
+      "target": "N-016",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-001-N-021",
+      "source": "J-001",
+      "target": "N-021",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-001-N-023",
+      "source": "J-001",
+      "target": "N-023",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-021-J-002",
+      "source": "N-021",
+      "target": "J-002",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-002-J-003",
+      "source": "J-002",
+      "target": "J-003",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-002-N-022",
+      "source": "J-002",
+      "target": "N-022",
+      "sourceHandle": "s-top",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-003-J-004",
+      "source": "J-003",
+      "target": "J-004",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-004-J-005",
+      "source": "J-004",
+      "target": "J-005",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-005-J-006",
+      "source": "J-005",
+      "target": "J-006",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-006-J-007",
+      "source": "J-006",
+      "target": "J-007",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-007-J-009",
+      "source": "J-007",
+      "target": "J-009",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-009-J-010",
+      "source": "J-009",
+      "target": "J-010",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-010-J-011",
+      "source": "J-010",
+      "target": "J-011",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-011-J-012",
+      "source": "J-011",
+      "target": "J-012",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-012-J-013",
+      "source": "J-012",
+      "target": "J-013",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-013-J-014",
+      "source": "J-013",
+      "target": "J-014",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-014-J-015",
+      "source": "J-014",
+      "target": "J-015",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-015-J-016",
+      "source": "J-015",
+      "target": "J-016",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-016-J-017",
+      "source": "J-016",
+      "target": "J-017",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-017-J-018",
+      "source": "J-017",
+      "target": "J-018",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-018-J-019",
+      "source": "J-018",
+      "target": "J-019",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-019-J-020",
+      "source": "J-019",
+      "target": "J-020",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-020-J-021",
+      "source": "J-020",
+      "target": "J-021",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-021-J-022",
+      "source": "J-021",
+      "target": "J-022",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-022-J-023",
+      "source": "J-022",
+      "target": "J-023",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-023-N-059",
+      "source": "J-023",
+      "target": "N-059",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-N-059-J-024",
+      "source": "N-059",
+      "target": "J-024",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-024-N-062",
+      "source": "J-024",
+      "target": "N-062",
+      "sourceHandle": "s-right",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-024-N-061",
+      "source": "J-024",
+      "target": "N-061",
+      "sourceHandle": "s-top",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-023-N-060",
+      "source": "J-023",
+      "target": "N-060",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-022-N-058",
+      "source": "J-022",
+      "target": "N-058",
+      "sourceHandle": "s-top",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-021-N-084",
+      "source": "J-021",
+      "target": "N-084",
+      "sourceHandle": "s-top",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-020-N-032",
+      "source": "J-020",
+      "target": "N-032",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-019-N-090",
+      "source": "J-019",
+      "target": "N-090",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-right",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-018-N-057",
+      "source": "J-018",
+      "target": "N-057",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-017-N-056",
+      "source": "J-017",
+      "target": "N-056",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-016-N-055",
+      "source": "J-016",
+      "target": "N-055",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-015-N-053",
+      "source": "J-015",
+      "target": "N-053",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-014-N-054",
+      "source": "J-014",
+      "target": "N-054",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-013-N-052",
+      "source": "J-013",
+      "target": "N-052",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-012-N-051",
+      "source": "J-012",
+      "target": "N-051",
+      "sourceHandle": "s-top",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-011-N-050",
+      "source": "J-011",
+      "target": "N-050",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-009-N-040",
+      "source": "J-009",
+      "target": "N-040",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-010-N-041",
+      "source": "J-010",
+      "target": "N-041",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-005-N-029",
+      "source": "J-005",
+      "target": "N-029",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-006-N-028",
+      "source": "J-006",
+      "target": "N-028",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-007-N-026",
+      "source": "J-007",
+      "target": "N-026",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-004-N-025",
+      "source": "J-004",
+      "target": "N-025",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    },
+    {
+      "id": "e-J-003-N-024",
+      "source": "J-003",
+      "target": "N-024",
+      "sourceHandle": "s-bottom",
+      "targetHandle": "t-left",
+      "label": "",
+      "condition": "",
+      "animated": false
+    }
+  ],
+  "groups": []
+}

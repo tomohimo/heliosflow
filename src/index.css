@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   Helios Flow — デザインシステム（テーマ対応）
+   ======================================== */
+
+:root {
+  /* デフォルト（ダークモード） */
+  --hf-bg-primary: #0c111d;
+  --hf-bg-secondary: #141928;
+  --hf-bg-elevated: #1a2035;
+  --hf-bg-card: #1e2540;
+  --hf-border: rgba(255, 255, 255, 0.06);
+  --hf-border-light: rgba(255, 255, 255, 0.1);
+  --hf-text-primary: #f1f5f9;
+  --hf-text-secondary: #94a3b8;
+  --hf-text-muted: #64748b;
+  --hf-accent: #6366f1;
+  --hf-accent-light: #818cf8;
+  --hf-shadow: rgba(0, 0, 0, 0.3);
+  --hf-node-bg: linear-gradient(135deg, rgba(30, 37, 64, 0.95), rgba(20, 25, 40, 0.98));
+  --hf-minimap-mask: rgba(12, 17, 29, 0.7);
+
+  /* 進行中アニメーション用（ダーク）: 薄めの黄色（アンバー）とカード背景のミックス */
+  --hf-progress-bg: linear-gradient(270deg, rgba(251, 191, 36, 0.15), rgba(30, 37, 64, 0.95), rgba(251, 191, 36, 0.15));
+}
+
+[data-theme="light"] {
+  /* ライトモード override */
+  --hf-bg-primary: #f8fafc;
+  /* slate-50 */
+  --hf-bg-secondary: #f1f5f9;
+  /* slate-100 */
+  --hf-bg-elevated: #ffffff;
+  /* white */
+  --hf-bg-card: #ffffff;
+  /* white */
+  --hf-border: #e2e8f0;
+  /* slate-200 */
+  --hf-border-light: #cbd5e1;
+  /* slate-300 */
+  --hf-text-primary: #0f172a;
+  /* slate-900 */
+  --hf-text-secondary: #475569;
+  /* slate-600 */
+  --hf-text-muted: #94a3b8;
+  /* slate-400 */
+  --hf-accent: #4f46e5;
+  /* indigo-600 */
+  --hf-accent-light: #6366f1;
+  /* indigo-500 */
+  --hf-shadow: rgba(0, 0, 0, 0.05);
+  --hf-node-bg: #ffffff;
+  --hf-minimap-mask: rgba(248, 250, 252, 0.7);
+
+  /* 進行中アニメーション用（ライト）: 薄い黄色（アンバー） */
+  --hf-progress-bg: linear-gradient(270deg, rgba(251, 191, 36, 0.15), #ffffff, rgba(251, 191, 36, 0.15));
+}
+
+body {
+  background-color: var(--hf-bg-primary);
+  color: var(--hf-text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  /* React Flowコンテナのため */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ユーティリティ */
+.glass {
+  background: rgba(var(--hf-bg-elevated), 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hf-border-light);
+}
+
+[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--hf-border);
+}
+
+
+/* アニメーション定義 */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 背景グラデーションアニメーション */
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-bg {
+  background-size: 200% 200% !important;
+  animation: gradient-move 3s ease infinite;
+}
