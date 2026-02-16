@@ -5,7 +5,7 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react()],
-    base: './', // for GH pages hash router relative paths compatibility
+    base: '/heliosflow/', // for GH pages
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
