@@ -4,15 +4,47 @@ import { NODE_STATUSES, CATEGORY_LABELS } from '@/constants';
 // ステータスマップの型: { [nodeId]: statusKey }
 export type StatusMap = Record<string, string>;
 
+// 担当者割り当ての型: { [nodeId]: assigneeName }
+export type AssigneeMap = Record<string, string>;
+
+// 期日の型: { [nodeId]: dateString(YYYY-MM-DD or undefined) }
+export type DueDateMap = Record<string, string>;
+
 // ローカルストレージのキー
-const LS_KEY = 'heliosflow_status';
+const LS_KEY_STATUS = 'heliosflow_status';
+const LS_KEY_ASSIGNEE = 'heliosflow_assignee';
+const LS_KEY_DUEDATE = 'heliosflow_duedate';
 
 /**
  * ローカルストレージからステータスを読み込む
  */
 export const loadStatusFromStorage = (): StatusMap => {
     try {
-        const raw = localStorage.getItem(LS_KEY);
+        const raw = localStorage.getItem(LS_KEY_STATUS);
+        return raw ? JSON.parse(raw) : {};
+    } catch {
+        return {};
+    }
+};
+
+/**
+ * ローカルストレージから担当者を読み込む
+ */
+export const loadAssigneeFromStorage = (): AssigneeMap => {
+    try {
+        const raw = localStorage.getItem(LS_KEY_ASSIGNEE);
+        return raw ? JSON.parse(raw) : {};
+    } catch {
+        return {};
+    }
+};
+
+/**
+ * ローカルストレージから期日を読み込む
+ */
+export const loadDueDateFromStorage = (): DueDateMap => {
+    try {
+        const raw = localStorage.getItem(LS_KEY_DUEDATE);
         return raw ? JSON.parse(raw) : {};
     } catch {
         return {};
@@ -23,33 +55,43 @@ export const loadStatusFromStorage = (): StatusMap => {
  * ローカルストレージにステータスを保存する
  */
 export const saveStatusToStorage = (statusMap: StatusMap): void => {
-    localStorage.setItem(LS_KEY, JSON.stringify(statusMap));
+    localStorage.setItem(LS_KEY_STATUS, JSON.stringify(statusMap));
 };
 
 /**
- * ステータスラベル → ステータスキーへの逆引き
+ * ローカルストレージに担当者を保存する
  */
-const labelToKey = (label: string): string => {
-    const entry = Object.entries(NODE_STATUSES).find(([, v]) => v.label === label);
-    return entry ? entry[0] : 'pending';
+export const saveAssigneeToStorage = (assigneeMap: AssigneeMap): void => {
+    localStorage.setItem(LS_KEY_ASSIGNEE, JSON.stringify(assigneeMap));
 };
+
+/**
+ * ローカルストレージに期日を保存する
+ */
+export const saveDueDateToStorage = (dueDateMap: DueDateMap): void => {
+    localStorage.setItem(LS_KEY_DUEDATE, JSON.stringify(dueDateMap));
+};
+
+
 
 /**
  * ノードデータをExcelファイルとしてエクスポートする
  */
 export const exportStatusToExcel = (
-    nodes: Array<{ id: string; data: { label: string; category: string } }>,
+    nodes: Array<{ id: string; data: any }>,
     statusMap: StatusMap,
+    assigneeMap: AssigneeMap,
+    dueDateMap: DueDateMap,
     projectName: string
 ): void => {
     // 案件名行
-    const titleRow = ['案件名', projectName, '', ''];
+    const titleRow = ['案件名', projectName, '', '', '', ''];
     // 更新日行
-    const dateRow = ['更新日', formatDateDisplay(), '', ''];
+    const dateRow = ['更新日', new Date().toLocaleDateString('ja-JP'), '', '', '', ''];
     // 空行
-    const emptyRow = ['', '', '', ''];
+    const emptyRow = ['', '', '', '', '', ''];
     // ヘッダー行
-    const header = ['ID', 'タイトル', 'カテゴリ', 'ステータス'];
+    const header = ['ID', 'タイトル', 'カテゴリ', 'ステータス', '担当者', '期日'];
 
     // データ行（junction以外のノードのみ）
     const rows = nodes
@@ -58,7 +100,9 @@ export const exportStatusToExcel = (
             n.id,
             n.data.label,
             CATEGORY_LABELS[n.data.category] || n.data.category,
-            NODE_STATUSES[statusMap[n.id] || 'pending']?.label || '未着手'
+            NODE_STATUSES[statusMap[n.id] || 'pending']?.label || '未着手',
+            assigneeMap[n.id] || '',
+            dueDateMap[n.id] || ''
         ]);
 
     // ワークシート作成
@@ -70,18 +114,35 @@ export const exportStatusToExcel = (
         { wch: 30 },  // タイトル
         { wch: 15 },  // カテゴリ
         { wch: 12 },  // ステータス
+        { wch: 15 },  // 担当者
+        { wch: 12 },  // 期日
     ];
 
     // ワークブック作成・ダウンロード
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'ステータス管理');
-    XLSX.writeFile(wb, `heliosflow_status_${formatDate()}.xlsx`);
+
+    // YYYYMMDD形式の日付文字列生成
+    const d = new Date();
+    const yyyymmdd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+
+    let fileName = '';
+    if (projectName) {
+        // ファイル名として不適切な文字を置換
+        const safeProjectName = projectName.replace(/[\\/:*?"<>|]/g, '_');
+        fileName = `${safeProjectName}_${yyyymmdd}${hhmm}.xlsx`;
+    } else {
+        fileName = `${yyyymmdd}${hhmm}.xlsx`;
+    }
+
+    XLSX.writeFile(wb, fileName);
 };
 
 /**
  * Excelファイルからステータスをインポートする
  */
-export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMap; projectName: string }> => {
+export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMap; assigneeMap: AssigneeMap; dueDateMap: DueDateMap; projectName: string }> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -91,50 +152,64 @@ export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMa
 
                 // 最初のシートを取得
                 const ws = wb.Sheets[wb.SheetNames[0]];
-                const rows: string[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-                // 案件名を取得（1行目のB列）
-                let projectName = '';
-                if (rows[0] && rows[0][0] === '案件名' && rows[0][1]) {
-                    projectName = String(rows[0][1]).trim();
-                }
+                // 案件名 (B1セル想定: 行インデックス0, 列インデックス1)
+                const projectName = rows.length > 0 && rows[0].length > 1 ? String(rows[0][1]) : '';
 
-                // ヘッダー行（3行目）をスキップしてデータ行（4行目以降）を処理
                 const statusMap: StatusMap = {};
-                const dataStartRow = rows.findIndex((row, i) => i > 0 && row && row[0] === 'ID');
-                const startIdx = dataStartRow >= 0 ? dataStartRow + 1 : 3;
+                const assigneeMap: AssigneeMap = {};
+                const dueDateMap: DueDateMap = {};
 
-                for (let i = startIdx; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (row && row[0] && row[3]) {
-                        const nodeId = String(row[0]).trim();
-                        const statusLabel = String(row[3]).trim();
-                        statusMap[nodeId] = labelToKey(statusLabel);
+                // ヘッダー行を探す ('ID'が含まれる行)
+                let headerIndex = -1;
+                for (let i = 0; i < Math.min(rows.length, 10); i++) {
+                    if (rows[i] && rows[i][0] === 'ID') {
+                        headerIndex = i;
+                        break;
                     }
                 }
 
-                resolve({ statusMap, projectName });
+                if (headerIndex === -1) {
+                    throw new Error('有効なヘッダー行(ID列)が見つかりません');
+                }
+
+                // データ行の読み込み
+                for (let i = headerIndex + 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || !row[0]) continue;
+
+                    const id = String(row[0]);
+
+                    // ステータス (D列: index 3)
+                    const statusLabel = row[3];
+                    if (statusLabel) {
+                        const entry = Object.entries(NODE_STATUSES).find(([, v]) => v.label === statusLabel);
+                        if (entry) {
+                            statusMap[id] = entry[0];
+                        }
+                    }
+
+                    // 担当者 (E列: index 4)
+                    const assignee = row[4];
+                    if (assignee) {
+                        assigneeMap[id] = String(assignee);
+                    }
+
+                    // 期日 (F列: index 5)
+                    const dueDate = row[5];
+                    if (dueDate) {
+                        dueDateMap[id] = String(dueDate);
+                    }
+                }
+
+                resolve({ statusMap, assigneeMap, dueDateMap, projectName });
             } catch (err) {
-                reject(new Error('Excelファイルの読み込みに失敗しました。'));
+                console.error(err);
+                reject(err);
             }
         };
         reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました。'));
         reader.readAsArrayBuffer(file);
     });
-};
-
-/**
- * 日付フォーマット（ファイル名用）
- */
-const formatDate = (): string => {
-    const d = new Date();
-    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-};
-
-/**
- * 日付フォーマット（表示用）
- */
-const formatDateDisplay = (): string => {
-    const d = new Date();
-    return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
 };

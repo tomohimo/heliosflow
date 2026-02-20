@@ -1,14 +1,104 @@
-import { useState, useMemo } from 'react';
-import { Star, ArrowUpDown, Search } from 'lucide-react';
-import { Node } from '@xyflow/react';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { Star, ArrowUpDown, Search, Check, ChevronDown } from 'lucide-react';
+import { Node as FlowNode } from '@xyflow/react';
 import { NodeData } from '@/types';
 import { CATEGORY_LABELS, CATEGORY_COLORS, NODE_STATUSES } from '@/constants';
-import { StatusMap } from '@/utils/excelStatus';
+import { StatusMap, AssigneeMap, DueDateMap } from '@/utils/excelStatus';
 
-const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: string[], statusMap: StatusMap }) => {
+const ASSIGNEES = ['宮崎', '若林', '猪又', '堀', 'その他'];
+
+type ListViewProps = {
+    nodes: FlowNode[];
+    favorites: string[];
+    statusMap: StatusMap;
+    assigneeMap: AssigneeMap;
+    onAssigneeChange: (nodeId: string, assignee: string) => void;
+    dueDateMap: DueDateMap;
+    onDueDateChange: (nodeId: string, date: string) => void;
+};
+
+// 複数選択ドロップダウンコンポーネント
+const MultiSelectAssignee = ({
+    selected,
+    onChange
+}: {
+    selected: string, // カンマ区切りの文字列
+    onChange: (val: string) => void
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const selectedList = selected ? selected.split(',').filter(Boolean) : [];
+
+    // クリック外で閉じる
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as globalThis.Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const toggleAssignee = (name: string) => {
+        let newList;
+        if (selectedList.includes(name)) {
+            newList = selectedList.filter(s => s !== name);
+        } else {
+            newList = [...selectedList, name];
+        }
+        onChange(newList.join(','));
+    };
+
+    return (
+        <div className="relative w-32" ref={containerRef}>
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center justify-between px-2 py-1.5 text-xs bg-transparent border-b border-gray-600 cursor-pointer hover:bg-white/5 transition-colors"
+                style={{ color: 'var(--hf-text-primary)' }}
+            >
+                <div className="truncate mr-1 h-4">
+                    {selectedList.length > 0 ? selectedList.join(', ') : <span className="text-gray-500">-</span>}
+                </div>
+                <ChevronDown size={12} className="opacity-50" />
+            </div>
+
+            {isOpen && (
+                <div
+                    className="absolute top-full left-0 z-50 w-full mt-1 rounded-md shadow-lg overflow-hidden"
+                    style={{
+                        background: 'var(--hf-bg-elevated)',
+                        border: '1px solid var(--hf-border)'
+                    }}
+                >
+                    {ASSIGNEES.map(name => {
+                        const isSelected = selectedList.includes(name);
+                        return (
+                            <div
+                                key={name}
+                                onClick={() => toggleAssignee(name)}
+                                className="flex items-center px-3 py-2 text-xs cursor-pointer hover:bg-white/10"
+                                style={{ color: 'var(--hf-text-primary)' }}
+                            >
+                                <div className={`w-3 h-3 border rounded mr-2 flex items-center justify-center ${isSelected ? 'bg-indigo-500 border-indigo-500' : 'border-gray-500'}`}>
+                                    {isSelected && <Check size={10} className="text-white" />}
+                                </div>
+                                {name}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, dueDateMap, onDueDateChange }: ListViewProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
+    const [assigneeFilter, setAssigneeFilter] = useState(''); // 担当者簡易フィルタ（テキスト一致）
     const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
 
     const filteredAndSortedNodes = useMemo(() => {
@@ -24,7 +114,10 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
             const statusKey = statusMap[n.id] || 'pending';
             const matchesStatus = statusFilter === 'all' || statusKey === statusFilter;
 
-            return matchesSearch && matchesCategory && matchesStatus;
+            const assignee = assigneeMap[n.id] || '';
+            const matchesAssignee = assignee.toLowerCase().includes(assigneeFilter.toLowerCase());
+
+            return matchesSearch && matchesCategory && matchesStatus && matchesAssignee;
         });
 
         if (sortConfig) {
@@ -54,6 +147,14 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
                         valA = labelA;
                         valB = labelB;
                         break;
+                    case 'assignee':
+                        valA = assigneeMap[a.id] || '';
+                        valB = assigneeMap[b.id] || '';
+                        break;
+                    case 'dueDate':
+                        valA = dueDateMap[a.id] || '';
+                        valB = dueDateMap[b.id] || '';
+                        break;
                     case 'fav':
                         valA = favorites.includes(a.id) ? 1 : 0;
                         valB = favorites.includes(b.id) ? 1 : 0;
@@ -69,7 +170,7 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
         }
 
         return result;
-    }, [nodes, searchTerm, categoryFilter, statusFilter, sortConfig, statusMap, favorites]);
+    }, [nodes, searchTerm, categoryFilter, statusFilter, assigneeFilter, sortConfig, statusMap, favorites, assigneeMap, dueDateMap]);
 
     const handleSort = (key: string) => {
         setSortConfig(current => {
@@ -87,7 +188,7 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
 
     return (
         <div className="h-full w-full overflow-y-auto p-4 sm:p-8" style={{ background: 'var(--hf-bg-primary)' }}>
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <h2 className="text-xl font-bold flex items-center gap-3" style={{ color: 'var(--hf-text-primary)' }}>
                         <div className="w-1 h-6 rounded-full" style={{ background: 'var(--hf-accent)' }} />
@@ -103,10 +204,26 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
                             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                             <input
                                 type="text"
-                                placeholder="検索..."
+                                placeholder="IDまたはタイトル..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                                 className="pl-8 pr-3 py-1.5 rounded-lg text-xs w-40 outline-none border transition-all"
+                                style={{
+                                    background: 'var(--hf-bg-elevated)',
+                                    color: 'var(--hf-text-primary)',
+                                    borderColor: 'var(--hf-border-light)'
+                                }}
+                            />
+                        </div>
+
+                        {/* 担当者フィルタ */}
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="担当者絞り込み..."
+                                value={assigneeFilter}
+                                onChange={e => setAssigneeFilter(e.target.value)}
+                                className="px-3 py-1.5 rounded-lg text-xs w-32 outline-none border transition-all"
                                 style={{
                                     background: 'var(--hf-bg-elevated)',
                                     color: 'var(--hf-text-primary)',
@@ -177,13 +294,19 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
                                 <th onClick={() => handleSort('status')} className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:bg-white/5 transition-colors" style={{ color: 'var(--hf-text-muted)' }}>
                                     <div className="flex items-center gap-1">ステータス <SortIcon colKey="status" /></div>
                                 </th>
+                                <th onClick={() => handleSort('assignee')} className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:bg-white/5 transition-colors" style={{ color: 'var(--hf-text-muted)' }}>
+                                    <div className="flex items-center gap-1">担当者 <SortIcon colKey="assignee" /></div>
+                                </th>
+                                <th onClick={() => handleSort('dueDate')} className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:bg-white/5 transition-colors" style={{ color: 'var(--hf-text-muted)' }}>
+                                    <div className="flex items-center gap-1">期日 <SortIcon colKey="dueDate" /></div>
+                                </th>
                                 <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--hf-text-muted)' }}>タグ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredAndSortedNodes.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-5 py-8 text-center text-sm" style={{ color: 'var(--hf-text-secondary)' }}>
+                                    <td colSpan={8} className="px-5 py-8 text-center text-sm" style={{ color: 'var(--hf-text-secondary)' }}>
                                         該当するタスクはありません。
                                     </td>
                                 </tr>
@@ -227,6 +350,39 @@ const ListView = ({ nodes, favorites, statusMap }: { nodes: Node[], favorites: s
                                                     <span className="text-[8px]">{st.icon}</span>
                                                     {st.label}
                                                 </span>
+                                            </td>
+                                            <td className="px-5 py-3.5">
+                                                <MultiSelectAssignee
+                                                    selected={assigneeMap[n.id] || ''}
+                                                    onChange={(val) => onAssigneeChange(n.id, val)}
+                                                />
+                                            </td>
+                                            <td className="px-5 py-3.5 relative group">
+                                                <div className="text-xs whitespace-nowrap" style={{ color: dueDateMap[n.id] ? 'var(--hf-text-primary)' : 'var(--hf-text-muted)' }}>
+                                                    {(() => {
+                                                        const dateStr = dueDateMap[n.id];
+                                                        if (!dateStr) return '-';
+                                                        try {
+                                                            const [y, m, d] = dateStr.split('-').map(Number);
+                                                            const date = new Date(y, m - 1, d);
+                                                            const days = ['日', '月', '火', '水', '木', '金', '土'];
+                                                            return `${y}/${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')} (${days[date.getDay()]})`;
+                                                        } catch {
+                                                            return dateStr;
+                                                        }
+                                                    })()}
+                                                </div>
+                                                <input
+                                                    type="date"
+                                                    value={dueDateMap[n.id] || ''}
+                                                    onChange={(e) => onDueDateChange(n.id, e.target.value)}
+                                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                                    onClick={(e) => {
+                                                        try {
+                                                            (e.currentTarget as HTMLInputElement).showPicker();
+                                                        } catch { }
+                                                    }}
+                                                />
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 <div className="flex gap-1">
