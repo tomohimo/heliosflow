@@ -4,7 +4,7 @@ import { NodeData } from '@/types';
 import { CATEGORY_COLORS, CATEGORY_LABELS, NODE_STATUSES } from '@/constants';
 import { Star, AlertTriangle } from 'lucide-react';
 
-const CustomNode = memo(({ data, id }: { data: NodeData & { isFav?: boolean; nodeStatus?: string, assignee?: string, dueDate?: string }, id: string }) => {
+const CustomNode = memo(({ data, id }: { data: NodeData & { isFav?: boolean; nodeStatus?: string, assignee?: string, dueDate?: string, memo?: string }, id: string }) => {
     const color = CATEGORY_COLORS[data.category] || CATEGORY_COLORS.default;
 
     const isGrayed = data.nodeStatus === 'completed' || data.nodeStatus === 'notApplicable';
@@ -89,6 +89,8 @@ const CustomNode = memo(({ data, id }: { data: NodeData & { isFav?: boolean; nod
                     style={{ color: 'var(--hf-text-primary)' }}>
                     {data.label}
                 </div>
+
+
 
                 {/* ステータスバッジ（左下） */}
                 <div className="absolute bottom-3 left-3 flex items-center">

@@ -10,10 +10,14 @@ export type AssigneeMap = Record<string, string>;
 // 期日の型: { [nodeId]: dateString(YYYY-MM-DD or undefined) }
 export type DueDateMap = Record<string, string>;
 
+// メモの型: { [nodeId]: memoText }
+export type MemoMap = Record<string, string>;
+
 // ローカルストレージのキー
 const LS_KEY_STATUS = 'heliosflow_status';
 const LS_KEY_ASSIGNEE = 'heliosflow_assignee';
 const LS_KEY_DUEDATE = 'heliosflow_duedate';
+const LS_KEY_MEMO = 'heliosflow_memo';
 
 /**
  * ローカルストレージからステータスを読み込む
@@ -72,6 +76,25 @@ export const saveDueDateToStorage = (dueDateMap: DueDateMap): void => {
     localStorage.setItem(LS_KEY_DUEDATE, JSON.stringify(dueDateMap));
 };
 
+/**
+ * ローカルストレージからメモを読み込む
+ */
+export const loadMemoFromStorage = (): MemoMap => {
+    try {
+        const raw = localStorage.getItem(LS_KEY_MEMO);
+        return raw ? JSON.parse(raw) : {};
+    } catch {
+        return {};
+    }
+};
+
+/**
+ * ローカルストレージにメモを保存する
+ */
+export const saveMemoToStorage = (memoMap: MemoMap): void => {
+    localStorage.setItem(LS_KEY_MEMO, JSON.stringify(memoMap));
+};
+
 
 
 /**
@@ -82,16 +105,17 @@ export const exportStatusToExcel = (
     statusMap: StatusMap,
     assigneeMap: AssigneeMap,
     dueDateMap: DueDateMap,
+    memoMap: MemoMap,
     projectName: string
 ): void => {
     // 案件名行
-    const titleRow = ['案件名', projectName, '', '', '', ''];
+    const titleRow = ['案件名', projectName, '', '', '', '', ''];
     // 更新日行
-    const dateRow = ['更新日', new Date().toLocaleDateString('ja-JP'), '', '', '', ''];
+    const dateRow = ['更新日', new Date().toLocaleDateString('ja-JP'), '', '', '', '', ''];
     // 空行
-    const emptyRow = ['', '', '', '', '', ''];
+    const emptyRow = ['', '', '', '', '', '', ''];
     // ヘッダー行
-    const header = ['ID', 'タイトル', 'カテゴリ', 'ステータス', '担当者', '期日'];
+    const header = ['ID', 'タイトル', 'カテゴリ', 'ステータス', '担当者', '期日', 'メモ'];
 
     // データ行（junction以外のノードのみ）
     const rows = nodes
@@ -102,7 +126,8 @@ export const exportStatusToExcel = (
             CATEGORY_LABELS[n.data.category] || n.data.category,
             NODE_STATUSES[statusMap[n.id] || 'pending']?.label || '未着手',
             assigneeMap[n.id] || '',
-            dueDateMap[n.id] || ''
+            dueDateMap[n.id] || '',
+            memoMap[n.id] || ''
         ]);
 
     // ワークシート作成
@@ -116,6 +141,7 @@ export const exportStatusToExcel = (
         { wch: 12 },  // ステータス
         { wch: 15 },  // 担当者
         { wch: 12 },  // 期日
+        { wch: 40 },  // メモ
     ];
 
     // ワークブック作成・ダウンロード
@@ -142,7 +168,7 @@ export const exportStatusToExcel = (
 /**
  * Excelファイルからステータスをインポートする
  */
-export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMap; assigneeMap: AssigneeMap; dueDateMap: DueDateMap; projectName: string }> => {
+export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMap; assigneeMap: AssigneeMap; dueDateMap: DueDateMap; memoMap: MemoMap; projectName: string }> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -160,6 +186,7 @@ export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMa
                 const statusMap: StatusMap = {};
                 const assigneeMap: AssigneeMap = {};
                 const dueDateMap: DueDateMap = {};
+                const memoMap: MemoMap = {};
 
                 // ヘッダー行を探す ('ID'が含まれる行)
                 let headerIndex = -1;
@@ -201,9 +228,15 @@ export const importStatusFromExcel = (file: File): Promise<{ statusMap: StatusMa
                     if (dueDate) {
                         dueDateMap[id] = String(dueDate);
                     }
+
+                    // メモ (G列: index 6)
+                    const memo = row[6];
+                    if (memo) {
+                        memoMap[id] = String(memo);
+                    }
                 }
 
-                resolve({ statusMap, assigneeMap, dueDateMap, projectName });
+                resolve({ statusMap, assigneeMap, dueDateMap, memoMap, projectName });
             } catch (err) {
                 console.error(err);
                 reject(err);

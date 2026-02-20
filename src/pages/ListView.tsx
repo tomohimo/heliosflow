@@ -3,7 +3,7 @@ import { Star, ArrowUpDown, Search, Check, ChevronDown } from 'lucide-react';
 import { Node as FlowNode } from '@xyflow/react';
 import { NodeData } from '@/types';
 import { CATEGORY_LABELS, CATEGORY_COLORS, NODE_STATUSES } from '@/constants';
-import { StatusMap, AssigneeMap, DueDateMap } from '@/utils/excelStatus';
+import { StatusMap, AssigneeMap, DueDateMap, MemoMap } from '@/utils/excelStatus';
 
 const ASSIGNEES = ['宮崎', '若林', '猪又', '堀', 'その他'];
 
@@ -15,6 +15,9 @@ type ListViewProps = {
     onAssigneeChange: (nodeId: string, assignee: string) => void;
     dueDateMap: DueDateMap;
     onDueDateChange: (nodeId: string, date: string) => void;
+    onStatusChange: (nodeId: string, status: string) => void;
+    memoMap: MemoMap;
+    onMemoChange: (nodeId: string, memo: string) => void;
 };
 
 // 複数選択ドロップダウンコンポーネント
@@ -94,7 +97,7 @@ const MultiSelectAssignee = ({
     );
 };
 
-const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, dueDateMap, onDueDateChange }: ListViewProps) => {
+const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, dueDateMap, onDueDateChange, onStatusChange, memoMap, onMemoChange }: ListViewProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -300,13 +303,14 @@ const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, 
                                 <th onClick={() => handleSort('dueDate')} className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:bg-white/5 transition-colors" style={{ color: 'var(--hf-text-muted)' }}>
                                     <div className="flex items-center gap-1">期日 <SortIcon colKey="dueDate" /></div>
                                 </th>
+                                <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--hf-text-muted)', minWidth: '150px' }}>メモ</th>
                                 <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--hf-text-muted)' }}>タグ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredAndSortedNodes.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="px-5 py-8 text-center text-sm" style={{ color: 'var(--hf-text-secondary)' }}>
+                                    <td colSpan={9} className="px-5 py-8 text-center text-sm" style={{ color: 'var(--hf-text-secondary)' }}>
                                         該当するタスクはありません。
                                     </td>
                                 </tr>
@@ -343,13 +347,25 @@ const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, 
                                                 </span>
                                             </td>
                                             <td className="px-5 py-3.5">
-                                                <span
-                                                    className="text-[10px] font-semibold px-2 py-1 rounded-md inline-flex items-center gap-1"
-                                                    style={{ background: st.bgColor, color: st.color }}
-                                                >
-                                                    <span className="text-[8px]">{st.icon}</span>
-                                                    {st.label}
-                                                </span>
+                                                <div className="relative inline-block">
+                                                    <span
+                                                        className="text-[10px] font-semibold px-2 py-1 rounded-md inline-flex items-center gap-1 cursor-pointer"
+                                                        style={{ background: st.bgColor, color: st.color }}
+                                                    >
+                                                        <span className="text-[8px]">{st.icon}</span>
+                                                        {st.label}
+                                                    </span>
+                                                    <select
+                                                        value={statusMap[n.id] || 'pending'}
+                                                        onChange={(e) => onStatusChange(n.id, e.target.value)}
+                                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                        title="ステータスを変更"
+                                                    >
+                                                        {Object.entries(NODE_STATUSES).map(([key, s]) => (
+                                                            <option key={key} value={key}>{s.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 <MultiSelectAssignee
@@ -382,6 +398,16 @@ const ListView = ({ nodes, favorites, statusMap, assigneeMap, onAssigneeChange, 
                                                             (e.currentTarget as HTMLInputElement).showPicker();
                                                         } catch { }
                                                     }}
+                                                />
+                                            </td>
+                                            <td className="px-5 py-3.5">
+                                                <input
+                                                    type="text"
+                                                    value={memoMap[n.id] || ''}
+                                                    onChange={e => onMemoChange(n.id, e.target.value)}
+                                                    placeholder="-"
+                                                    className="w-full bg-transparent text-xs outline-none border-b border-gray-700/50 focus:border-indigo-500 transition-colors py-1"
+                                                    style={{ color: 'var(--hf-text-secondary)' }}
                                                 />
                                             </td>
                                             <td className="px-5 py-3.5">

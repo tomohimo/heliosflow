@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
 import { ReactFlow, Background, Controls, MiniMap, Panel, Node, Edge } from '@xyflow/react';
 import { MIN_ZOOM, CATEGORY_COLORS } from '@/constants';
-import { StatusMap, AssigneeMap, DueDateMap } from '@/utils/excelStatus';
+import { StatusMap, AssigneeMap, DueDateMap, MemoMap } from '@/utils/excelStatus';
 import CustomNode from '@/components/CustomNode';
 import JunctionNode from '@/components/JunctionNode';
 import { AlertTriangle } from 'lucide-react';
 
 const FlowView = ({
-    nodes, edges, statusMap, assigneeMap, dueDateMap, onNodeClick, onInit, favorites
+    nodes, edges, statusMap, assigneeMap, dueDateMap, memoMap, onNodeClick, onInit, favorites
 }: {
-    nodes: Node[], edges: Edge[], statusMap: StatusMap, assigneeMap: AssigneeMap, dueDateMap: DueDateMap, onNodeClick: (n: Node) => void, onInit: any, favorites: string[]
+    nodes: Node[], edges: Edge[], statusMap: StatusMap, assigneeMap: AssigneeMap, dueDateMap: DueDateMap, memoMap: MemoMap, onNodeClick: (n: Node) => void, onInit: any, favorites: string[]
 }) => {
     // ノードタイプ定義
     const nodeTypes = useMemo(() => ({ custom: CustomNode, junction: JunctionNode }), []);
@@ -24,10 +24,11 @@ const FlowView = ({
                 isFav: favorites.includes(n.id),
                 nodeStatus: statusMap[n.id] || 'pending',
                 assignee: assigneeMap[n.id] || '',
-                dueDate: dueDateMap[n.id] || ''
+                dueDate: dueDateMap[n.id] || '',
+                memo: memoMap[n.id] || ''
             }
         }));
-    }, [nodes, favorites, statusMap, assigneeMap, dueDateMap]);
+    }, [nodes, favorites, statusMap, assigneeMap, dueDateMap, memoMap]);
 
     // 期限切れノード抽出
     const overdueNodes = useMemo(() => {

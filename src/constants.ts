@@ -45,3 +45,6 @@ export const NODE_STATUSES: Record<string, { label: string; color: string; bgCol
 
 export const SNAP_GRID: [number, number] = [20, 20];
 export const MIN_ZOOM = 0.1;
+
+// 担当者リスト
+export const ASSIGNEES = ['宮崎', '若林', '猪又', '堀', 'その他'];

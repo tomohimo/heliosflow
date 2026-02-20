@@ -1,125 +1,24 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { useNodesState, useEdgesState, ReactFlowProvider, Node, Edge, useReactFlow } from '@xyflow/react';
+import { useState, useEffect, useMemo } from 'react';
+import { useNodesState, useEdgesState, ReactFlowProvider, Node, Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, List, LayoutDashboard, Info, Star, X, ExternalLink, Filter, Download, Upload, Loader2, Moon, Sun, RotateCcw, Check, ChevronDown, BookOpen } from 'lucide-react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import { Search, List, LayoutDashboard, Info, Star, Download, Upload, Loader2, Moon, Sun, RotateCcw, Filter, BookOpen } from 'lucide-react';
 
 import { AppData, NodeData } from '@/types';
-import { CATEGORY_COLORS, CATEGORY_LABELS, NODE_STATUSES } from '@/constants';
-import { StatusMap, AssigneeMap, DueDateMap, loadStatusFromStorage, saveStatusToStorage, loadAssigneeFromStorage, saveAssigneeToStorage, loadDueDateFromStorage, saveDueDateToStorage, exportStatusToExcel, importStatusFromExcel } from '@/utils/excelStatus';
+import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/constants';
+import { useNodeData } from '@/hooks/useNodeData';
+import { useExcelIO } from '@/hooks/useExcelIO';
 import FlowView from '@/components/FlowView';
 import CategoryPill from '@/components/CategoryPill';
+import CursorPosDisplay from '@/components/CursorPosDisplay';
+import HeaderLink from '@/components/HeaderLink';
+import NodeDetailModal from '@/components/NodeDetailModal';
 import ListView from '@/pages/ListView';
 import AboutView from '@/pages/AboutView';
 import ManualView from '@/pages/ManualView';
 
-// 座標表示（開発用）
-const CursorPosDisplay = () => {
-    const { screenToFlowPosition } = useReactFlow();
-    const [pos, setPos] = useState({ x: 0, y: 0 });
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            const flowPos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
-            setPos(flowPos);
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [screenToFlowPosition]);
-
-    return (
-        <div className="absolute bottom-4 right-4 glass rounded-lg px-3 py-1.5 text-[10px] font-mono pointer-events-none z-50"
-            style={{ color: 'var(--hf-text-muted)' }}>
-            X: {pos.x.toFixed(0)}, Y: {pos.y.toFixed(0)}
-        </div>
-    );
-};
-
-// --- メインアプリ ---
-// 担当者リスト（共通定義とすべきだが一旦ここに）
-const ASSIGNEES = ['宮崎', '若林', '猪又', '堀', 'その他'];
-
-// 複数選択ドロップダウンコンポーネント
-const MultiSelectAssignee = ({
-    selected,
-    onChange
-}: {
-    selected: string, // カンマ区切りの文字列
-    onChange: (val: string) => void
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    const selectedList = selected ? selected.split(',').filter(Boolean) : [];
-
-    // クリック外で閉じる
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as globalThis.Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const toggleAssignee = (name: string) => {
-        let newList;
-        if (selectedList.includes(name)) {
-            newList = selectedList.filter(s => s !== name);
-        } else {
-            newList = [...selectedList, name];
-        }
-        onChange(newList.join(','));
-    };
-
-    return (
-        <div className="relative w-full" ref={containerRef}>
-            <div
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-between px-3 py-2 text-sm bg-transparent border rounded-lg cursor-pointer hover:bg-white/5 transition-colors"
-                style={{
-                    color: 'var(--hf-text-primary)',
-                    borderColor: 'var(--hf-border)'
-                }}
-            >
-                <div className="truncate mr-2">
-                    {selectedList.length > 0 ? selectedList.join(', ') : <span className="text-gray-500">担当者を選択...</span>}
-                </div>
-                <ChevronDown size={14} className="opacity-50" />
-            </div>
-
-            {isOpen && (
-                <div
-                    className="absolute top-full left-0 z-50 w-full mt-1 rounded-lg shadow-lg overflow-hidden py-1"
-                    style={{
-                        background: 'var(--hf-bg-elevated)',
-                        border: '1px solid var(--hf-border)'
-                    }}
-                >
-                    {ASSIGNEES.map(name => {
-                        const isSelected = selectedList.includes(name);
-                        return (
-                            <div
-                                key={name}
-                                onClick={() => toggleAssignee(name)}
-                                className="flex items-center px-3 py-2 text-sm cursor-pointer hover:bg-white/10"
-                                style={{ color: 'var(--hf-text-primary)' }}
-                            >
-                                <div className={`w-4 h-4 border rounded mr-2.5 flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-500 border-indigo-500' : 'border-gray-500'}`}>
-                                    {isSelected && <Check size={12} className="text-white" />}
-                                </div>
-                                {name}
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-};
-
 const App = () => {
+    // --- ノード・エッジの基本状態 ---
     const [nodes, setNodes] = useNodesState<Node>([]);
     const [edges, setEdges] = useEdgesState<Edge>([]);
     const [loading, setLoading] = useState(true);
@@ -132,9 +31,7 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState('all');
 
-
-
-    // テーマ管理
+    // --- テーマ管理 ---
     const [theme, setTheme] = useState(() => localStorage.getItem('helios_theme') || 'dark');
 
     useEffect(() => {
@@ -146,109 +43,36 @@ const App = () => {
         setTheme(prev => prev === 'dark' ? 'light' : 'dark');
     };
 
-    // ステータス管理
-    const [statusMap, setStatusMap] = useState<StatusMap>(loadStatusFromStorage);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    // --- ノードデータ管理（カスタムフック） ---
+    const {
+        statusMap, setStatusMap,
+        assigneeMap, setAssigneeMap,
+        dueDateMap, setDueDateMap,
+        memoMap, setMemoMap,
+        projectName,
+        lastUpdated,
+        handleStatusChange,
+        handleAssigneeChange,
+        handleDueDateChange,
+        handleMemoChange,
+        handleProjectNameChange,
+        updateTimestamp,
+        clearAllData,
+    } = useNodeData();
 
-    // 案件名管理
-    const [projectName, setProjectName] = useState(() => {
-        return localStorage.getItem('heliosflow_project') || '';
+    // --- Excel入出力（カスタムフック） ---
+    const { fileInputRef, handleExport, handleImport } = useExcelIO({
+        nodes,
+        statusMap, setStatusMap,
+        assigneeMap, setAssigneeMap,
+        dueDateMap, setDueDateMap,
+        memoMap, setMemoMap,
+        projectName,
+        setProjectName: handleProjectNameChange,
+        updateTimestamp,
     });
-    const handleProjectNameChange = (name: string) => {
-        setProjectName(name);
-        localStorage.setItem('heliosflow_project', name);
-    };
 
-    // 更新日管理
-    const [lastUpdated, setLastUpdated] = useState(() => {
-        return localStorage.getItem('heliosflow_updated') || '';
-    });
-    const updateTimestamp = () => {
-        const now = new Date();
-        const ts = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        setLastUpdated(ts);
-        localStorage.setItem('heliosflow_updated', ts);
-    };
-
-    // ステータス変更ハンドラ
-    const handleStatusChange = (nodeId: string, status: string) => {
-        setStatusMap(prev => {
-            const next = { ...prev, [nodeId]: status };
-            saveStatusToStorage(next);
-            return next;
-        });
-        updateTimestamp();
-    };
-
-    // 担当割り当て管理
-    const [assigneeMap, setAssigneeMap] = useState<AssigneeMap>(loadAssigneeFromStorage);
-
-    const handleAssigneeChange = (nodeId: string, assignee: string) => {
-        setAssigneeMap(prev => {
-            const next = { ...prev, [nodeId]: assignee };
-            saveAssigneeToStorage(next);
-            return next;
-        });
-        // updateTimestamp()は現状ステータス更新時のみだが、担当変更でも更新日を変えるか？今回は含めないでおくか、含めるか。
-        // 要件にはないが、データ更新として扱うのが自然
-        updateTimestamp();
-    };
-
-    // 期日管理
-    const [dueDateMap, setDueDateMap] = useState<DueDateMap>(loadDueDateFromStorage);
-
-    const handleDueDateChange = (nodeId: string, date: string) => {
-        setDueDateMap(prev => {
-            const next = { ...prev, [nodeId]: date };
-            saveDueDateToStorage(next);
-            return next;
-        });
-        updateTimestamp();
-    };
-
-    // Excelエクスポート
-    const handleExport = () => {
-        exportStatusToExcel(
-            nodes.map(n => ({ id: n.id, data: n.data as any })),
-            statusMap,
-            assigneeMap,
-            dueDateMap,
-            projectName
-        );
-    };
-
-    // Excelインポート
-    const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        try {
-            const { statusMap: newStatus, assigneeMap: newAssignee, dueDateMap: newDueDate, projectName: newProject } = await importStatusFromExcel(file);
-
-            setStatusMap(newStatus);
-            saveStatusToStorage(newStatus);
-
-            setAssigneeMap(newAssignee);
-            saveAssigneeToStorage(newAssignee);
-
-            setDueDateMap(newDueDate);
-            saveDueDateToStorage(newDueDate);
-
-            if (newProject) {
-                setProjectName(newProject);
-                localStorage.setItem('heliosflow_project', newProject);
-            }
-            updateTimestamp();
-            alert('インポートが完了しました');
-        } catch (err: any) {
-            console.error(err);
-            alert('インポートに失敗しました: ' + err.message);
-        }
-
-        if (e.target) e.target.value = '';
-    };
-
-    // データ読み込み
+    // --- データ読み込み ---
     useEffect(() => {
         fetch(`${import.meta.env.BASE_URL}data.json`)
             .then(res => {
@@ -300,14 +124,13 @@ const App = () => {
             });
     }, []);
 
-    // フィルターロジック
+    // --- フィルターロジック ---
     const filteredNodes = useMemo(() => {
         return nodes.filter(n => {
             const data = n.data as NodeData;
             const matchesSearch = data.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 n.id.toLowerCase().includes(searchTerm.toLowerCase());
 
-            // カテゴリまたはお気に入りでのフィルタリング
             let matchesCat = true;
             if (activeCategory === 'favorites') {
                 matchesCat = favorites.includes(n.id);
@@ -319,7 +142,7 @@ const App = () => {
         });
     }, [nodes, searchTerm, activeCategory, favorites]);
 
-    // お気に入りロジック
+    // --- お気に入りロジック ---
     useEffect(() => {
         const handleFav = (e: any) => {
             const id = e.detail.id;
@@ -333,7 +156,12 @@ const App = () => {
         return () => window.removeEventListener('toggleFav', handleFav);
     }, []);
 
-    // ローディング画面
+    const handleToggleFav = (nodeId: string) => {
+        const event = new CustomEvent('toggleFav', { detail: { id: nodeId } });
+        window.dispatchEvent(event);
+    };
+
+    // --- ローディング画面 ---
     if (loading) return (
         <div className="h-screen w-screen flex flex-col items-center justify-center gap-4"
             style={{ background: 'var(--hf-bg-primary)' }}>
@@ -344,7 +172,7 @@ const App = () => {
         </div>
     );
 
-    // エラー画面
+    // --- エラー画面 ---
     if (error) return (
         <div className="h-screen w-screen flex flex-col items-center justify-center gap-4"
             style={{ background: 'var(--hf-bg-primary)' }}>
@@ -354,9 +182,6 @@ const App = () => {
             </div>
         </div>
     );
-
-    const selectedNodeData = selectedNode?.data as NodeData | undefined;
-    const selectedColor = selectedNodeData ? (CATEGORY_COLORS[selectedNodeData.category] || CATEGORY_COLORS.default) : '#6366f1';
 
     return (
         <HashRouter>
@@ -423,15 +248,7 @@ const App = () => {
                         <button
                             onClick={() => {
                                 if (window.confirm('現在の状態と案件名をすべてクリアしますか？')) {
-                                    setStatusMap({});
-                                    saveStatusToStorage({});
-                                    setAssigneeMap({});
-                                    saveAssigneeToStorage({});
-                                    setDueDateMap({});
-                                    saveDueDateToStorage({});
-                                    handleProjectNameChange('');
-                                    setLastUpdated('');
-                                    localStorage.removeItem('heliosflow_updated');
+                                    clearAllData();
                                 }
                             }}
                             className="flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 hover:bg-red-500/10 hover:text-red-500"
@@ -489,6 +306,7 @@ const App = () => {
                                         edges={edges}
                                         statusMap={statusMap}
                                         assigneeMap={assigneeMap}
+                                        memoMap={memoMap}
                                         dueDateMap={dueDateMap}
                                         onNodeClick={(n) => setSelectedNode(prev => prev?.id === n.id ? null : n)}
                                         onInit={() => { }}
@@ -535,6 +353,9 @@ const App = () => {
                                 onAssigneeChange={handleAssigneeChange}
                                 dueDateMap={dueDateMap}
                                 onDueDateChange={handleDueDateChange}
+                                memoMap={memoMap}
+                                onMemoChange={handleMemoChange}
+                                onStatusChange={handleStatusChange}
                             />
                         } />
                         <Route path="/about" element={<AboutView />} />
@@ -542,206 +363,25 @@ const App = () => {
                     </Routes>
 
                     {/* ========== 詳細モーダル ========== */}
-                    {selectedNode && selectedNodeData && (
-                        <div
-                            className="absolute top-4 right-4 z-50 w-[340px] rounded-2xl flex flex-col overflow-hidden max-h-[calc(100vh-100px)] animate-slide-in-right"
-                            style={{
-                                background: 'linear-gradient(180deg, var(--hf-bg-elevated), var(--hf-bg-secondary))',
-                                border: '1px solid var(--hf-border-light)',
-                                boxShadow: '0 16px 64px var(--hf-shadow), 0 0 0 1px var(--hf-border)',
-                            }}
-                        >
-                            {/* カテゴリカラーライン */}
-                            <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${selectedColor}, ${selectedColor}40)` }} />
-
-                            {/* ヘッダー */}
-                            <div className="p-5 flex justify-between items-start" style={{ borderBottom: '1px solid var(--hf-border)' }}>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md"
-                                            style={{ background: `${selectedColor}15`, color: selectedColor }}>
-                                            {CATEGORY_LABELS[selectedNodeData.category] || selectedNodeData.category}
-                                        </span>
-                                        <span className="text-[10px] font-mono" style={{ color: 'var(--hf-text-muted)' }}>
-                                            {selectedNode.id}
-                                        </span>
-                                    </div>
-                                    <h2 className="text-lg font-bold leading-tight" style={{ color: 'var(--hf-text-primary)' }}>
-                                        {selectedNodeData.label}
-                                    </h2>
-                                </div>
-                                <button
-                                    onClick={() => setSelectedNode(null)}
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors shrink-0 ml-3"
-                                    style={{ color: 'var(--hf-text-muted)', background: 'var(--hf-bg-card)' }}
-                                >
-                                    <X size={14} />
-                                </button>
-                            </div>
-
-                            {/* スクロールコンテンツ */}
-                            <div className="p-5 overflow-y-auto flex-1 space-y-5">
-
-                                {/* ステータス選択 */}
-                                <div>
-                                    <div className="text-[10px] font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--hf-text-muted)' }}>ステータス</div>
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {Object.entries(NODE_STATUSES).map(([key, s]) => {
-                                            const isActive = (statusMap[selectedNode.id] || 'pending') === key;
-                                            return (
-                                                <button
-                                                    key={key}
-                                                    onClick={() => handleStatusChange(selectedNode.id, key)}
-                                                    className="text-[11px] px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5"
-                                                    style={{
-                                                        border: `1px solid ${isActive ? s.color : 'var(--hf-border-light)'}`,
-                                                        background: isActive ? s.bgColor : 'transparent',
-                                                        color: isActive ? s.color : 'var(--hf-text-secondary)',
-                                                        fontWeight: isActive ? 600 : 400,
-                                                    }}
-                                                >
-                                                    <span className="text-[9px]">{s.icon}</span> {s.label}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* 担当者 */}
-                                <div>
-                                    <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--hf-text-muted)' }}>担当者</div>
-                                    <MultiSelectAssignee
-                                        selected={assigneeMap[selectedNode.id] || ''}
-                                        onChange={(val) => handleAssigneeChange(selectedNode.id, val)}
-                                    />
-                                </div>
-
-                                {/* 期日 */}
-                                <div>
-                                    <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--hf-text-muted)' }}>期日</div>
-                                    <div className="relative group">
-                                        <div
-                                            className="w-full px-3 py-2 text-sm rounded-lg border transition-colors flex items-center min-h-[38px]"
-                                            style={{
-                                                background: 'var(--hf-bg-elevated)',
-                                                color: dueDateMap[selectedNode.id] ? 'var(--hf-text-primary)' : 'var(--hf-text-muted)',
-                                                border: '1px solid var(--hf-border)',
-                                            }}
-                                        >
-                                            {(() => {
-                                                const dateStr = dueDateMap[selectedNode.id];
-                                                if (!dateStr) return '未設定';
-                                                try {
-                                                    const [y, m, d] = dateStr.split('-').map(Number);
-                                                    const date = new Date(y, m - 1, d);
-                                                    const days = ['日', '月', '火', '水', '木', '金', '土'];
-                                                    return `${y}/${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')} (${days[date.getDay()]})`;
-                                                } catch {
-                                                    return dateStr;
-                                                }
-                                            })()}
-                                        </div>
-                                        <input
-                                            type="date"
-                                            value={dueDateMap[selectedNode.id] || ''}
-                                            onChange={(e) => handleDueDateChange(selectedNode.id, e.target.value)}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                            onClick={(e) => {
-                                                try {
-                                                    (e.currentTarget as HTMLInputElement).showPicker();
-                                                } catch { }
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* 説明 */}
-                                <div>
-                                    <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--hf-text-muted)' }}>説明</div>
-                                    <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--hf-text-secondary)' }}>
-                                        {selectedNodeData.description || "説明はありません。"}
-                                    </div>
-                                </div>
-
-                                {/* タグ */}
-                                {selectedNodeData.tags?.length > 0 && (
-                                    <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--hf-text-muted)' }}>タグ</div>
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {selectedNodeData.tags.map((t: string) => (
-                                                <span key={t} className="text-[11px] px-2 py-0.5 rounded-md"
-                                                    style={{ color: 'var(--hf-text-secondary)', background: 'var(--hf-bg-card)', border: '1px solid var(--hf-border)' }}>
-                                                    #{t}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* リンク */}
-                                {selectedNodeData.links?.length > 0 && (
-                                    <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--hf-text-muted)' }}>リンク</div>
-                                        <div className="flex flex-col gap-1.5">
-                                            {selectedNodeData.links.map((l: any, i: number) => (
-                                                <a key={i} href={l.url} target="_blank" rel="noreferrer"
-                                                    className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg transition-all duration-200"
-                                                    style={{
-                                                        color: 'var(--hf-accent-light)',
-                                                        background: 'var(--hf-bg-card)',
-                                                        border: '1px solid var(--hf-border)',
-                                                    }}>
-                                                    <ExternalLink size={13} />
-                                                    {l.label}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* フッター */}
-                            <div className="px-5 py-3 flex justify-end" style={{ borderTop: '1px solid var(--hf-border)' }}>
-                                <button
-                                    onClick={() => {
-                                        const event = new CustomEvent('toggleFav', { detail: { id: selectedNode.id } });
-                                        window.dispatchEvent(event);
-                                    }}
-                                    className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200"
-                                    style={{
-                                        background: favorites.includes(selectedNode.id) ? 'rgba(251, 191, 36, 0.1)' : 'var(--hf-bg-card)',
-                                        border: favorites.includes(selectedNode.id) ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid var(--hf-border-light)',
-                                        color: favorites.includes(selectedNode.id) ? 'var(--hf-accent)' : 'var(--hf-text-secondary)', // 黄色だとライトテーマで見にくい場合があるので調整
-                                    }}
-                                >
-                                    <Star size={12} className={favorites.includes(selectedNode.id) ? "fill-amber-400 text-amber-400" : ""} />
-                                    {favorites.includes(selectedNode.id) ? "お気に入り済み" : "お気に入りに追加"}
-                                </button>
-                            </div>
-                        </div>
+                    {selectedNode && (
+                        <NodeDetailModal
+                            selectedNode={selectedNode}
+                            onClose={() => setSelectedNode(null)}
+                            statusMap={statusMap}
+                            assigneeMap={assigneeMap}
+                            dueDateMap={dueDateMap}
+                            memoMap={memoMap}
+                            favorites={favorites}
+                            onStatusChange={handleStatusChange}
+                            onAssigneeChange={handleAssigneeChange}
+                            onDueDateChange={handleDueDateChange}
+                            onMemoChange={handleMemoChange}
+                            onToggleFav={handleToggleFav}
+                        />
                     )}
                 </div>
             </div>
         </HashRouter >
-    );
-};
-
-// --- ヘッダーリンク ---
-const HeaderLink = ({ to, icon, label }: { to: string, icon: any, label: string }) => {
-    const loc = useLocation();
-    const active = loc.pathname === to;
-    return (
-        <Link
-            to={to}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200"
-            style={{
-                background: active ? 'var(--hf-accent)' : 'transparent',
-                color: active ? '#fff' : 'var(--hf-text-secondary)',
-            }}
-        >
-            {icon}
-            {label}
-        </Link>
     );
 };
 
