@@ -811,7 +811,7 @@
       "title": "中間金書類",
       "description": "中間金関連",
       "role": "",
-      "category": "milestone",
+      "category": "inspection",
       "status": "active",
       "tags": [
         "書類",
@@ -1553,11 +1553,11 @@
       "title": "法令関係 名義変更手続",
       "description": "名義変更系",
       "role": "",
-      "category": "registration",
+      "category": "legal",
       "status": "active",
       "tags": [
         "手続",
-        "登記/法務"
+        "法令/法務"
       ],
       "links": [],
       "inputs": [],

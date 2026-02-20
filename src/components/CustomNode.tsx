@@ -23,6 +23,7 @@ const CustomNode = memo(({ data, id }: { data: NodeData & { isFav?: boolean; nod
             className={`rounded-xl shadow-md border-2 border-transparent hover:shadow-lg transition-all w-[200px] group relative ${isGrayed ? 'opacity-40' : ''} ${isInProgress ? 'animate-gradient-bg' : ''}`}
             style={{
                 borderColor: isGrayed ? '#cbd5e1' : color,
+                borderWidth: (id === 'N-011' || id === 'N-021' || id === 'N-051' || id === 'N-058') ? '4px' : '2px',
                 background: isInProgress ? 'var(--hf-progress-bg)' : 'var(--hf-node-bg)',
                 filter: isGrayed ? 'grayscale(1)' : undefined,
                 color: 'var(--hf-text-primary)'
@@ -52,6 +53,15 @@ const CustomNode = memo(({ data, id }: { data: NodeData & { isFav?: boolean; nod
                     <Star size={14} className={data.isFav ? "fill-amber-400 text-amber-400" : "text-slate-400"} />
                 </div>
             </div>
+
+            {/* 提出書類バッジ（左上） - 特定ノードのみ */}
+            {['N-011', 'N-021', 'N-051', 'N-058'].includes(id) && (
+                <div className="absolute -top-3 left-0 flex items-center">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded shadow-sm bg-red-600 text-white border border-red-800">
+                        提出書類
+                    </span>
+                </div>
+            )}
 
             {/* コンテンツ */}
             <div className="p-3">

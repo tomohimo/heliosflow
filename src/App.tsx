@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNodesState, useEdgesState, ReactFlowProvider, Node, Edge, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, List, LayoutDashboard, Info, Star, X, ExternalLink, Filter, Download, Upload, Loader2, Moon, Sun } from 'lucide-react';
+import { Search, List, LayoutDashboard, Info, Star, X, ExternalLink, Filter, Download, Upload, Loader2, Moon, Sun, RotateCcw } from 'lucide-react';
 
 import { AppData, NodeData } from '@/types';
 import { CATEGORY_COLORS, CATEGORY_LABELS, NODE_STATUSES } from '@/constants';
@@ -179,10 +179,18 @@ const App = () => {
             const data = n.data as NodeData;
             const matchesSearch = data.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 n.id.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesCat = activeCategory === 'all' || data.category === activeCategory;
+
+            // カテゴリまたはお気に入りでのフィルタリング
+            let matchesCat = true;
+            if (activeCategory === 'favorites') {
+                matchesCat = favorites.includes(n.id);
+            } else if (activeCategory !== 'all') {
+                matchesCat = data.category === activeCategory;
+            }
+
             return matchesSearch && matchesCat;
         });
-    }, [nodes, searchTerm, activeCategory]);
+    }, [nodes, searchTerm, activeCategory, favorites]);
 
     // お気に入りロジック
     useEffect(() => {
@@ -284,6 +292,24 @@ const App = () => {
                             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
                         </button>
                         <div className="w-px h-4 mx-1" style={{ background: 'var(--hf-border-light)' }} />
+                        <button
+                            onClick={() => {
+                                if (window.confirm('現在の状態と案件名をすべてクリアしますか？')) {
+                                    setStatusMap({});
+                                    saveStatusToStorage({});
+                                    handleProjectNameChange('');
+                                    setLastUpdated('');
+                                    localStorage.removeItem('heliosflow_updated');
+                                }
+                            }}
+                            className="flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 hover:bg-red-500/10 hover:text-red-500"
+                            style={{ color: 'var(--hf-text-secondary)' }}
+                            title="状態をクリア"
+                        >
+                            <span className="sr-only">クリア</span>
+                            <RotateCcw size={15} />
+                        </button>
+                        <div className="w-px h-4 mx-1" style={{ background: 'var(--hf-border-light)' }} />
                         <input type="file" ref={fileInputRef} accept=".xlsx,.xls" onChange={handleImport} className="hidden" />
                         <button
                             onClick={() => fileInputRef.current?.click()}
@@ -336,9 +362,9 @@ const App = () => {
                                     <CursorPosDisplay />
                                 </ReactFlowProvider>
 
-                                {/* 検索オーバーレイ */}
-                                <div className="absolute top-4 left-4 z-10 w-64">
-                                    <div className="glass rounded-xl flex items-center px-3 py-2.5 gap-2.5"
+                                {/* 検索＆フィルターオーバーレイ */}
+                                <div className="absolute top-4 left-4 z-10 flex gap-2">
+                                    <div className="glass rounded-xl flex items-center px-3 py-2.5 gap-2.5 w-64"
                                         style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
                                         <Search size={15} style={{ color: 'var(--hf-accent-light)', flexShrink: 0 }} />
                                         <input
@@ -349,6 +375,19 @@ const App = () => {
                                             onChange={e => setSearchTerm(e.target.value)}
                                         />
                                     </div>
+
+                                    {/* お気に入りフィルター */}
+                                    <button
+                                        onClick={() => setActiveCategory(prev => prev === 'favorites' ? 'all' : 'favorites')}
+                                        className={`glass rounded-xl w-10 flex items-center justify-center transition-all duration-200 ${activeCategory === 'favorites' ? 'ring-2 ring-amber-400' : ''}`}
+                                        style={{
+                                            boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                                            background: activeCategory === 'favorites' ? 'rgba(251, 191, 36, 0.2)' : undefined
+                                        }}
+                                        title="お気に入りのみ表示"
+                                    >
+                                        <Star size={16} className={activeCategory === 'favorites' ? "fill-amber-400 text-amber-400" : "text-slate-400"} />
+                                    </button>
                                 </div>
                             </div>
                         } />
